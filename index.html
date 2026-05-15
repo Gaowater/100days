@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100天纪念日</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 40px 30px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .days-number {
+            font-size: 72px;
+            font-weight: bold;
+            color: #e91e63;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .days-label {
+            font-size: 18px;
+            color: #999;
+            margin-bottom: 24px;
+            letter-spacing: 2px;
+        }
+
+        .title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #777;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .photo-area {
+            margin-bottom: 20px;
+        }
+
+        .photo-area img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .message {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="days-number" id="daysCount">0</div>
+        <div class="days-label">天</div>
+        <div class="title" id="pageTitle">加载中...</div>
+        <div class="subtitle" id="pageSubtitle"></div>
+        <div class="photo-area">
+            <img id="mainPhoto" src="" alt="照片" style="display:none;">
+        </div>
+        <div class="message" id="pageMessage"></div>
+        <div class="footer">❤️ 100天纪念日</div>
+    </div>
+
+    <script>
+        fetch('config.json')
+            .then(response => response.json())
+            .then(config => {
+                // 计算天数
+                const startDate = new Date(config.startDate);
+                const today = new Date();
+                const diffTime = today - startDate;
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+                // 渲染页面
+                document.getElementById('daysCount').textContent = diffDays;
+                document.getElementById('pageTitle').textContent = config.title;
+                document.getElementById('pageSubtitle').textContent = config.subtitle;
+                document.getElementById('pageMessage').textContent = config.message;
+
+                // 渲染图片
+                const photo = document.getElementById('mainPhoto');
+                if (config.photo) {
+                    photo.src = config.photo;
+                    photo.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                document.getElementById('pageTitle').textContent = '加载失败';
+                console.error('加载配置失败:', error);
+            });
+    </script>
+</body>
+</html>
